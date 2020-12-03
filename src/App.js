@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import './App.css'
 // Importing CSS is okay (is not included, just to inform WebPack)
 import './Person/Person.css'
+import Radium, { StyleRoot } from 'radium'
 import Person from './Person/Person'
 
 // Stateful/Smart/Container component
@@ -67,11 +68,15 @@ class App extends Component {
   render() {
     // Not a class property but a normal variable in a function
     const style = {
-      backgroundColor: 'white',
+      backgroundColor: 'green',
       font: 'inherit',
       border: '1px solid blue',
       padding: '8px',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      ':hover': {
+        backgroundColor: 'lightgreen',
+        color: 'black'
+      }
     }
 
     // Take advantage of fact that render() is recalled upon state change ("if")
@@ -95,29 +100,44 @@ class App extends Component {
           }
         </div>
       )
+      style.backgroundColor = 'red';
+      style[':hover'] = {
+        backgroundColor: 'salmon',
+        color: 'black'
+      }
     }
 
-
+    const classes = []
+    if (this.state.persons.length <= 2) {
+      console.log('Here')
+      classes.push('red') // classes = ['red']
+    }
+    if (this.state.persons.length <= 1) {
+      classes.push('bold') // classes = ['red', 'bold']
+    }
 
     return (
       /* Recall JSX is just calls to ReactDOM.render(...) */
-      <div className="App">
-        <h1>Hi, I'm a React App</h1>
-        <p>This is really working!</p>
-        {/*DON'T add paranthesis after this.switchNameHandler because that will execute it*/}
-        <button style={style} onClick={this.togglePersonsHandler}>Toggle Persons</button>
+      <StyleRoot>
+        <div className="App">
+          <h1>Hi, I'm a React App</h1>
+          <p className={classes.join(' ')}>This is really working!</p>
+          {/*DON'T add paranthesis after this.switchNameHandler because that will execute it*/}
+          <button style={style} onClick={this.togglePersonsHandler}>Toggle Persons</button>
 
-        {/*Reusing a component three times*/}
+          {/*Reusing a component three times*/}
 
-        {/*name and age are examples of dynamic components passed in as HTML attributes */}
-        {/*Conditionaly rendering */}
-        {persons}
-      </div>
+          {/*name and age are examples of dynamic components passed in as HTML attributes */}
+          {/*Conditionaly rendering */}
+          {persons}
+        </div>
+      </StyleRoot>
+
     )
   }
 }
 
-export default App;
+export default Radium(App);
 
 
 
