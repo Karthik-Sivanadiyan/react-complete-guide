@@ -20,7 +20,8 @@ class App extends Component {
       { name: 'Max', age: 28 },
       { name: 'Manu', age: 29 },
       { name: 'Stephanie', age: 26 }
-    ]
+    ],
+    showPersons: false
   }
 
   // Best practice to append "*Handler" to methods not actively called but assigning as event handler later
@@ -50,6 +51,12 @@ class App extends Component {
     })
   }
 
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons
+    // Flip flag after rendering, not that setState MERGES and does NOT REPLACE
+    this.setState({showPersons: !doesShow})
+  }
+
   // A call to ReactDOM.render to render our component into the current DOM
   render() {
     // Not a class property but a normal variable in a function
@@ -66,26 +73,31 @@ class App extends Component {
         <h1>Hi, I'm a React App</h1>
         <p>This is really working!</p>
         {/*DON'T add paranthesis after this.switchNameHandler because that will execute it*/}
-        <button style={style} onClick={() => this.switchNameHandler('Maximilian!!')}>Switch name</button>
+        <button style={style} onClick={this.togglePersonsHandler}>Toggle Persons</button>
 
         {/*Reusing a component three times*/}
 
         {/*name and age are examples of dynamic components passed in as HTML attributes */}
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age} />
+        { /*Conditional rendering with ternary operator */
+          this.state.showPersons ?
+            <div>
+              <Person
+                name={this.state.persons[0].name}
+                age={this.state.persons[0].age} />
 
-        {/*This element can pass content passed between opening and closing tags as a prop too */}
-        {/*We also pass a method that to dumb components that don't have direct access to state */}
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          click={this.switchNameHandler.bind(this, 'Max!')}
-          changed={this.nameChangedHandler}>My Hobbies: Racing</Person>
+              {/*This element can pass content passed between opening and closing tags as a prop too */}
+              {/*We also pass a method that to dumb components that don't have direct access to state */}
+              <Person
+                name={this.state.persons[1].name}
+                age={this.state.persons[1].age}
+                click={this.switchNameHandler.bind(this, 'Max!')}
+                changed={this.nameChangedHandler}>My Hobbies: Racing</Person>
 
-        <Person
-          name={this.state.persons[2].name}
-          age={this.state.persons[2].age} />
+              <Person
+                name={this.state.persons[2].name}
+                age={this.state.persons[2].age} />
+            </div> : null
+        }
       </div>
     )
   }
