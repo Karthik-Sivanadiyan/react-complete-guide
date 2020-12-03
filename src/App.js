@@ -17,44 +17,50 @@ class App extends Component {
   // to reflect the newcontent.
   state = {
     persons: [
-      { name: 'Max', age: 28 },
-      { name: 'Manu', age: 29 },
-      { name: 'Stephanie', age: 26 }
+      { id: 'abc', name: 'Max', age: 28 },
+      { id: 'def', name: 'Manu', age: 29 },
+      { id: 'ghj', name: 'Stephanie', age: 26 }
     ],
     showPersons: false
   }
 
   // Best practice to append "*Handler" to methods not actively called but assigning as event handler later
   // Note this is valid JS code (a function inside of a function), used commonly with Hooks
-  switchNameHandler = (newName) => {
+  nameChangedHandler = (event, id) => {
     // console.log('Was clicked!')
     // Manipulate the state in the handler
     // DON'T DO THIS (doesn't merge or tell react state has been updated for new rendering): this.state.persons[0].name = 'Maximilian'
     // Use setState(...) instead
-    this.setState({ // THIS DOES NOT MERGE BUT REPLACES STATE (So use multiple useState(...) calls)
-      persons: [
-        { name: newName, age: 28 },
-        { name: 'Manu', age: 29 },
-        { name: 'Stephanie', age: 27 }
-      ]
+    // THIS DOES NOT MERGE BUT REPLACES STATE (So use multiple useState(...) calls)
+    const personIndex = this.state.persons.findIndex(person => {
+      return person.id === id
     })
+
+    // Deep copy to not mutate objects directly 
+    const personCopy = {
+      ...this.state.persons[personIndex]
+    }
+    personCopy.name = event.target.value
+    const personsCopy = [...this.state.persons]
+    personsCopy[personIndex] = personCopy
+
+    this.setState({ persons: personsCopy })
   }
 
-  nameChangedHandler = (event) => {
-    console.log(event);
-    this.setState({
-      persons: [
-        { name: 'Max', age: 28 },
-        { name: event.target.value, age: 29 }, // event target is the input element
-        { name: 'Stephanie', age: 27 }
-      ]
-    })
+  deletePersonHandler = (personIndex) => {
+    // For code readability fetch the persons array in state
+    // SAFER to update state immutably via copy (use spread operator)
+    const persons = [...this.state.persons]
+    // Use splice to removed one element from array at specified index
+    persons.splice(personIndex, 1)
+    // Update state by merge
+    this.setState({ persons: persons })
   }
 
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons
     // Flip flag after rendering, not that setState MERGES and does NOT REPLACE
-    this.setState({showPersons: !doesShow})
+    this.setState({ showPersons: !doesShow })
   }
 
   // A call to ReactDOM.render to render our component into the current DOM
@@ -68,7 +74,33 @@ class App extends Component {
       cursor: 'pointer'
     }
 
+    // Take advantage of fact that render() is recalled upon state change ("if")
+    let persons = null
+
+    if (this.state.showPersons) {
+      persons = (
+        <div>
+          {/*This element can pass content passed between opening and closing tags as a prop too */}
+          {/*We also pass a method that to dumb components that don't have direct access to state */}
+          {/* Output lists with the map method (which exposes second index argument), recall arrays are reference types in JS */
+            /* We need unique keys for virtual DOM to efficiently render large lists that change only some elements */
+            this.state.persons.map((person, index) => {
+              return <Person
+                click={() => { this.deletePersonHandler(index) }}
+                name={person.name}
+                age={person.age}
+                key={person.id}
+                changed={(event) => this.nameChangedHandler(event, person.id)} />
+            })
+          }
+        </div>
+      )
+    }
+
+
+
     return (
+      /* Recall JSX is just calls to ReactDOM.render(...) */
       <div className="App">
         <h1>Hi, I'm a React App</h1>
         <p>This is really working!</p>
@@ -78,26 +110,8 @@ class App extends Component {
         {/*Reusing a component three times*/}
 
         {/*name and age are examples of dynamic components passed in as HTML attributes */}
-        { /*Conditional rendering with ternary operator */
-          this.state.showPersons ?
-            <div>
-              <Person
-                name={this.state.persons[0].name}
-                age={this.state.persons[0].age} />
-
-              {/*This element can pass content passed between opening and closing tags as a prop too */}
-              {/*We also pass a method that to dumb components that don't have direct access to state */}
-              <Person
-                name={this.state.persons[1].name}
-                age={this.state.persons[1].age}
-                click={this.switchNameHandler.bind(this, 'Max!')}
-                changed={this.nameChangedHandler}>My Hobbies: Racing</Person>
-
-              <Person
-                name={this.state.persons[2].name}
-                age={this.state.persons[2].age} />
-            </div> : null
-        }
+        {/*Conditionaly rendering */}
+        {persons}
       </div>
     )
   }
