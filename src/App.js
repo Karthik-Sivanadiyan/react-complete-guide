@@ -4,8 +4,23 @@ import React, { Component } from 'react';
 import './App.css'
 // Importing CSS is okay (is not included, just to inform WebPack)
 import './Person/Person.css'
-import Radium, { StyleRoot } from 'radium'
+import styled from 'styled-components'
 import Person from './Person/Person'
+
+// Styled component gives the button access to props passed to the button
+const StyledButton = styled.button`
+  background-color: ${props => props.alt ? 'red' : 'green'};
+  color: white;
+  font: inherit;
+  border: 1px solid blue;
+  padding: 8px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: ${props => props.alt ? 'salmon' : 'lightgreen'};
+    color: black
+  }
+`
 
 // Stateful/Smart/Container component
 class App extends Component {
@@ -67,17 +82,6 @@ class App extends Component {
   // A call to ReactDOM.render to render our component into the current DOM
   render() {
     // Not a class property but a normal variable in a function
-    const style = {
-      backgroundColor: 'green',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer',
-      ':hover': {
-        backgroundColor: 'lightgreen',
-        color: 'black'
-      }
-    }
 
     // Take advantage of fact that render() is recalled upon state change ("if")
     let persons = null
@@ -100,11 +104,6 @@ class App extends Component {
           }
         </div>
       )
-      style.backgroundColor = 'red';
-      style[':hover'] = {
-        backgroundColor: 'salmon',
-        color: 'black'
-      }
     }
 
     const classes = []
@@ -118,26 +117,16 @@ class App extends Component {
 
     return (
       /* Recall JSX is just calls to ReactDOM.render(...) */
-      <StyleRoot>
-        <div className="App">
-          <h1>Hi, I'm a React App</h1>
-          <p className={classes.join(' ')}>This is really working!</p>
-          {/*DON'T add paranthesis after this.switchNameHandler because that will execute it*/}
-          <button style={style} onClick={this.togglePersonsHandler}>Toggle Persons</button>
-
-          {/*Reusing a component three times*/}
-
-          {/*name and age are examples of dynamic components passed in as HTML attributes */}
-          {/*Conditionaly rendering */}
-          {persons}
-        </div>
-      </StyleRoot>
-
+      <div className="App">
+        <h1>Hi, I'm a React App</h1>
+        <p className={classes.join(' ')}>This is really working!</p>
+        {/*DON'T add paranthesis after this.switchNameHandler because that will execute it*/}
+        {/*DON'T forget that a StyledButton has all the same properties a regular button would have*/}
+        <StyledButton alt={this.state.showPersons} onClick={this.togglePersonsHandler}>Toggle Persons</StyledButton>
+        {persons}
+      </div>
     )
   }
 }
 
-export default Radium(App);
-
-
-
+export default App;
