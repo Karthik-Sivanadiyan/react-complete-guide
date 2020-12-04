@@ -1,26 +1,9 @@
 // React must be imported to properly work with React JSX syntax
 // Hooks contain reusable code logic that is separate from thecomponent tree. They allow us to hook up functionality to ourcomponents.
 import React, { Component } from 'react';
-import './App.css'
+import classes from './App.module.css'
 // Importing CSS is okay (is not included, just to inform WebPack)
-import './Person/Person.css'
-import styled from 'styled-components'
 import Person from './Person/Person'
-
-// Styled component gives the button access to props passed to the button
-const StyledButton = styled.button`
-  background-color: ${props => props.alt ? 'red' : 'green'};
-  color: white;
-  font: inherit;
-  border: 1px solid blue;
-  padding: 8px;
-  cursor: pointer;
-  
-  &:hover {
-    background-color: ${props => props.alt ? 'salmon' : 'lightgreen'};
-    color: black
-  }
-`
 
 // Stateful/Smart/Container component
 class App extends Component {
@@ -86,6 +69,8 @@ class App extends Component {
     // Take advantage of fact that render() is recalled upon state change ("if")
     let persons = null
 
+    let btnClass = '';
+
     if (this.state.showPersons) {
       persons = (
         <div>
@@ -104,25 +89,27 @@ class App extends Component {
           }
         </div>
       )
+      btnClass = classes.Red;
+
     }
 
-    const classes = []
+    const msgClasses = []
     if (this.state.persons.length <= 2) {
       console.log('Here')
-      classes.push('red') // classes = ['red']
+      msgClasses.push('red') // classes = ['red']
     }
     if (this.state.persons.length <= 1) {
-      classes.push('bold') // classes = ['red', 'bold']
+      msgClasses.push('bold') // classes = ['red', 'bold']
     }
 
     return (
       /* Recall JSX is just calls to ReactDOM.render(...) */
-      <div className="App">
+      <div className={classes.App}>
         <h1>Hi, I'm a React App</h1>
-        <p className={classes.join(' ')}>This is really working!</p>
+        <p className={msgClasses.join(' ')}>This is really working!</p>
         {/*DON'T add paranthesis after this.switchNameHandler because that will execute it*/}
         {/*DON'T forget that a StyledButton has all the same properties a regular button would have*/}
-        <StyledButton alt={this.state.showPersons} onClick={this.togglePersonsHandler}>Toggle Persons</StyledButton>
+        <button className={btnClass} alt={this.state.showPersons} onClick={this.togglePersonsHandler}>Toggle Persons</button>
         {persons}
       </div>
     )
