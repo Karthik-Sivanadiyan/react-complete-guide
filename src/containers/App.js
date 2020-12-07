@@ -2,7 +2,7 @@
 // Hooks contain reusable code logic that is separate from thecomponent tree. They allow us to hook up functionality to ourcomponents.
 import React, { Component } from 'react';
 import classes from './App.module.css'
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 // Importing CSS is okay (is not included, just to inform WebPack)
 import Person from './Person/Person'
 
