@@ -51,7 +51,6 @@ class App extends Component {
   assigning as event handler later Note this is valid JS code (a function 
   inside of a function), used commonly with Hooks */
   nameChangedHandler = (event, id) => {
-    console.log('Was clicked!')
    /* Manipulate the state in the handler. DON'T DO THIS (doesn't merge or tell 
    react state has been updated for new rendering): 
    this.state.persons[0].name = 'Maximilian'. Use setState(...) instead. THIS 
@@ -116,7 +115,7 @@ class App extends Component {
     console.log('[App.js] componentDidMount()')
   }
 
-  /* UPDATE LIFECYCLE update loop segment of the lifecycle is something that 
+   /* UPDATE LIFECYCLE update loop segment of the lifecycle is something that 
   lives for the entire lifetime of the component (where the lifetime of a 
   component is if it needs to be displayed in the DOM)
   1. getDerivedStateFromProps(props, state)
@@ -125,6 +124,17 @@ class App extends Component {
   4. getSnapshotBeforeUpdate(prevProps, prevState)
   5. componentDidUpdate()
   */
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('[App.js] shouldComponentUpdate(nextProps, nextState)')
+    return true
+  }
+
+  componentDidUpdate() {
+    console.log('[App.js] componentDidUpdate()')
+  }
+
+ 
 }
 
 export default App;

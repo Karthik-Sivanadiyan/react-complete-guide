@@ -30,8 +30,9 @@ class Persons extends Component {
     })
   }
 
-  componentDidUpdate() {
-    console.log('[Persons.js] componentDidUpdate()')
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('[Persons.js] componentDidUpdate(prevProps, prevState, snapshot)')
+    console.log(snapshot)
   }
 }
 export default Persons
