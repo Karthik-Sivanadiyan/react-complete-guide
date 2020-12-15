@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react'
 import classes from './Cockpit.module.css'
 const Cockpit = (props) => {
+  // Executes for every render cycle of the cockpit
   useEffect(() => {
     console.log('[Cockpit.js] useEffect(...)')
+
+    // Mimic an HTTP Request
+    setTimeout(() => {
+      alert('Saved data to cloud!')
+    }, 1000)
   })
 
   let btnClass = ''
@@ -25,7 +31,7 @@ const Cockpit = (props) => {
     <div className={classes.Cockpit}>
       <h1>{props.title}</h1>
       <p className={msgClasses.join(' ')}>This is really working!</p>
-      <button className={btnClass} onClick={props.clicked}>Toggle 
+      <button className={btnClass} onClick={props.clicked}>Toggle
       Persons</button>
     </div>
   )

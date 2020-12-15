@@ -10,8 +10,7 @@ class Person extends Component {
     console.log('[Person.js] rendering...')
     return (
       <div className={classes.Person}>
-        <p onClick={this.props.click}> I'm {this.props.name} and I am 
-        {this.props.age} years old</p>
+        <p onClick={this.props.click}> I'm {this.props.name} and I am {this.props.age} years old</p>
         {/*Note that a JS Object is passed for style attribute */}
         {/*Note the special children property to access any elements between 
       tags*/}
