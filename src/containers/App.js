@@ -102,7 +102,6 @@ class App extends Component {
             clicked={this.togglePersonsHandler}
           />
           ) : null}
-
         {persons}
       </div>
     )
@@ -135,7 +134,7 @@ class App extends Component {
     console.log('[App.js] componentDidUpdate()')
   }
 
-  componentWillunmount() {
+  componentWillUnmount() {
     console.log('[App.js] componentWillunmount()')
   }
 }
