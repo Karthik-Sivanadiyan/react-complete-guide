@@ -28,7 +28,6 @@ class App extends Component {
     return state
   }
 
-
   /* We just hooked this component up with state. The useState hook is a
   function that we can invoke to return an array. The first value of thatarray 
   is the state variable we want to use. The second item in the array that’s 
@@ -43,18 +42,15 @@ class App extends Component {
       { id: 'def', name: 'Manu', age: 29 },
       { id: 'ghj', name: 'Stephanie', age: 26 }
     ],
-    showPersons: false
+    showPersons: false,
+    showCockpit: true
   }
 
-  
-  /* Best practice to append "*Handler" to methods not actively called but 
-  assigning as event handler later Note this is valid JS code (a function 
-  inside of a function), used commonly with Hooks */
   nameChangedHandler = (event, id) => {
-   /* Manipulate the state in the handler. DON'T DO THIS (doesn't merge or tell 
-   react state has been updated for new rendering): 
-   this.state.persons[0].name = 'Maximilian'. Use setState(...) instead. THIS 
-   DOES NOT MERGE BUT REPLACES STATE (So use multiple useState(...) calls) */
+    /* Manipulate the state in the handler. DON'T DO THIS (doesn't merge or tell 
+    react state has been updated for new rendering): 
+    this.state.persons[0].name = 'Maximilian'. Use setState(...) instead. THIS 
+    DOES NOT MERGE BUT REPLACES STATE (So use multiple useState(...) calls) */
     const personIndex = this.state.persons.findIndex(person => {
       return person.id === id
     })
@@ -97,11 +93,16 @@ class App extends Component {
 
     return (
       <div className={classes.App}>
-        <Cockpit
-          title={this.props.appTitle}
-          showPersons={this.state.showPersons}
-          persons={this.state.persons}
-          clicked={this.togglePersonsHandler} />
+        <button onClick={() => { this.setState({ showCockpit: false }) }}>Remove Cockpit</button>
+        {this.state.showCockpit ?
+          (<Cockpit
+            title={this.props.appTitle}
+            showPersons={this.state.showPersons}
+            persons={this.state.persons}
+            clicked={this.togglePersonsHandler}
+          />
+          ) : null}
+
         {persons}
       </div>
     )
@@ -115,15 +116,15 @@ class App extends Component {
     console.log('[App.js] componentDidMount()')
   }
 
-   /* UPDATE LIFECYCLE update loop segment of the lifecycle is something that 
-  lives for the entire lifetime of the component (where the lifetime of a 
-  component is if it needs to be displayed in the DOM)
-  1. getDerivedStateFromProps(props, state)
-  2. shouldComponentUpdate(nextProps, nextState)
-  3. render() (Updates Child Component Props)
-  4. getSnapshotBeforeUpdate(prevProps, prevState)
-  5. componentDidUpdate()
-  */
+  /* UPDATE LIFECYCLE update loop segment of the lifecycle is something that 
+ lives for the entire lifetime of the component (where the lifetime of a 
+ component is if it needs to be displayed in the DOM)
+ 1. getDerivedStateFromProps(props, state)
+ 2. shouldComponentUpdate(nextProps, nextState)
+ 3. render() (Updates Child Component Props)
+ 4. getSnapshotBeforeUpdate(prevProps, prevState)
+ 5. componentDidUpdate()
+ */
 
   shouldComponentUpdate(nextProps, nextState) {
     console.log('[App.js] shouldComponentUpdate(nextProps, nextState)')
@@ -134,7 +135,9 @@ class App extends Component {
     console.log('[App.js] componentDidUpdate()')
   }
 
- 
+  componentWillunmount() {
+    console.log('[App.js] componentWillunmount()')
+  }
 }
 
 export default App;

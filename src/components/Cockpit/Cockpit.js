@@ -6,10 +6,23 @@ const Cockpit = (props) => {
     console.log('[Cockpit.js] useEffect(...)')
 
     // Mimic an HTTP Request
-    setTimeout(() => {
+    /* setTimeout(() => {
       alert('Saved data to cloud!')
-    }, 1000)
-  }, [props.persons])
+    }, 1000) */
+
+    // Clean up work handled here
+    return () => {
+      console.log('[Cockpit.js] cleanup work in useEffect')
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log('[Cockpit.js] 2nd useEffect(...)')
+    // Clean up work handled here
+    return () => {
+      console.log('[Cockpit.js] cleanup work in 2nd useEffect(...)')
+    }
+  })
 
   let btnClass = ''
   if (props.showPersons) {
